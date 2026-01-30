@@ -1,0 +1,23 @@
+artifact_path: /home/inta@informatica.edu/Escritorio/proyecto_turismo_api/mlruns/1/models/m-cb33cb14f08e4f24837734ffa25c2e4b/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.5
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+    skops_trusted_types: null
+mlflow_version: 3.9.0
+model_id: m-cb33cb14f08e4f24837734ffa25c2e4b
+model_size_bytes: 513212
+model_uuid: m-cb33cb14f08e4f24837734ffa25c2e4b
+prompts: null
+run_id: 6c8fb1736a5f43d2a3d5a200214b36e0
+utc_time_created: '2026-01-30 17:52:02.516628'
