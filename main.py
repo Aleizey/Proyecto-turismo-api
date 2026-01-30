@@ -2,8 +2,12 @@ import mlflow.pyfunc
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 app = FastAPI(title="API Segittur")
+templates = Jinja2Templates(directory="pages")
 
 # 1. Definir el esquema
 class HotelInput(BaseModel):
@@ -30,6 +34,11 @@ except Exception as e:
     model_status = "ko"
 
 # --- Endpoints ---
+
+@app.get("/", response_class=HTMLResponse)
+async def read_item(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
 @app.get("/health")
 def health():
     return {"status": model_status}
