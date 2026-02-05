@@ -17,12 +17,12 @@ class HotelInput(BaseModel):
     PROVINCIA_CODE: int
     CATEGORIA_ALOJAMIENTO_CODE: int
 
-RUN_ID = "7ca55c0ff95d4c1183fe797be8c76fed" 
+RUN_ID = "6c8fb1736a5f43d2a3d5a200214b36e0" 
 model_uri = f"runs:/{RUN_ID}/modelo_final"
 
 try:
     model = mlflow.pyfunc.load_model(model_uri)
-    model_status = "ko"
+    model_status = "ok"
     print(f"Modelo {RUN_ID} cargado")
 except Exception as e:
     print(f"Error al cargar modelo: {e}")
@@ -40,7 +40,7 @@ def health():
 
 @app.post("/predict")
 def predict(input_data: HotelInput):
-    if model_status == "ok":
+    if model_status == "ko":
         raise HTTPException(status_code=500, detail="Modelo no cargado")
     
     df_input = pd.DataFrame([input_data.dict()])
