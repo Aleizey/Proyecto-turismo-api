@@ -5,6 +5,10 @@ from pydantic import BaseModel
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
+import io
+import os
+import joblib
+from databricks.sdk import WorkspaceClient
 
 app = FastAPI(title="API Segittur")
 templates = Jinja2Templates(directory="pages")
@@ -14,18 +18,32 @@ class HotelInput(BaseModel):
     MES: int
     PERIODO_ANTELACION_CODE: int
     CCAA_CODE: int
-    PROVINCIA_CODE: int
+    PROVINCIA_CODE: int 
     CATEGORIA_ALOJAMIENTO_CODE: int
 
-RUN_ID = "6c8fb1736a5f43d2a3d5a200214b36e0" 
-model_uri = f"runs:/{RUN_ID}/modelo_final"
+DB_HOST = "https://dbc-1a9bf387-9846.cloud.databricks.com"
+DB_TOKEN = os.getenv("DATABRICKS_TOKEN")
+ruta_volumen = "/Volumes/workspace/default/modeliapro/model.pkl"
 
 try:
-    model = mlflow.pyfunc.load_model(model_uri)
+    w = WorkspaceClient(host=DB_HOST, token=DB_TOKEN)
+
+    print("Accediendo al modelo en la nube...")
+    response = w.files.download(ruta_volumen)
+    
+    model_bytes = response.contents.read()
+    
+    if not model_bytes:
+        raise ValueError("El archivo da error.")
+
+    buffer = io.BytesIO(model_bytes)
+    model = joblib.load(buffer)
+    
     model_status = "ok"
-    print(f"Modelo {RUN_ID} cargado")
+    print("Modelo cargado...")
+
 except Exception as e:
-    print(f"Error al cargar modelo: {e}")
+    print(f"Error: {e}")
     model_status = "ko"
 
 # --- Endpoints ---

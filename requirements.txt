@@ -5,3 +5,5 @@ scikit-learn
 pandas
 pydantic
 numpy
+joblib
+databricks-sdk
