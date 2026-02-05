@@ -1,11 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
 </head>
-<body>
-    
+
+<body class="bg-slate-50">
+    <div
+        class="text-white bg-red-100 uppercase flex items-center p-10 pb-50 bg-[linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url('https://media.revistagq.com/photos/5ca5f072501e5472ac7c591d/master/w_1600%2Cc_limit/hotel_lujo_2934.jpg')] bg-center bg-cover justify-center content-center flex-col">
+        <div class="">
+            <p class="text-3xl font-light">¿tu hospedaje es </p>
+            <p class="text-7xl italic font-bold">
+                <span class="text-red-500">Caro</span>
+                o
+                <span class="text-green-500"> Barato?</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="justify-center flex">
+        <div
+            class=" w-max rounded-3xl bg-white w-full grid grid-cols-3 max-w-2xl rounded-2xl shadow-xl overflow-hidden absolute top-[30%] ">
+
+            <form id="dataForm" class="p-8 grid grid-cols-1 col-span-2 md:grid-cols-2 gap-6">
+
+                <div class="relative group">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Año</label>
+                    <div class="relative">
+                        <select id="AÑO" name="AÑO"
+                            class="w-full bg-slate-50 border-b-2 border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-tenerife-ocean focus:border-tenerife-ocean block p-3 pr-10 appearance-none transition-all outline-none">
+                            <option value="" disabled selected>Selecciona año...</option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                            <i class="fa-regular fa-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative group">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Mes</label>
+                    <div class="relative">
+                        <select id="MES" name="MES"
+                            class="w-full bg-slate-50 border-b-2 border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-tenerife-ocean focus:border-tenerife-ocean block p-3 pr-10 appearance-none transition-all outline-none">
+                            <option value="" disabled selected>Selecciona mes...</option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                            <i class="fa-regular fa-calendar-days"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative group">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Comunidad Autónoma</label>
+                    <select id="CCAA_CODE" name="CCAA_CODE"
+                        class="w-full bg-slate-50 border-b-2 border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-tenerife-ocean focus:border-tenerife-ocean block p-3 outline-none">
+                        <option value="" disabled selected>Cargando datos...</option>
+                    </select>
+                </div>
+
+                <div class="relative group">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Provincia</label>
+                    <select id="PROVINCIA_CODE" name="PROVINCIA_CODE"
+                        class="w-full bg-slate-50 border-b-2 border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-tenerife-ocean focus:border-tenerife-ocean block p-3 outline-none">
+                        <option value="" disabled selected>Cargando datos...</option>
+                    </select>
+                </div>
+
+                <div class="relative group md:col-span-2">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Categoría Alojamiento</label>
+                    <select id="CATEGORIA_ALOJAMIENTO_CODE" name="CATEGORIA_ALOJAMIENTO_CODE"
+                        class="w-full bg-slate-50 border-b-2 border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-tenerife-ocean focus:border-tenerife-ocean block p-3 outline-none">
+                        <option value="" disabled selected>Cargando categorías...</option>
+                    </select>
+                </div>
+
+                <div class="relative group md:col-span-2">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Periodo de Antelación</label>
+                    <select id="PERIODO_ANTELACION_CODE" name="PERIODO_ANTELACION_CODE"
+                        class="w-full bg-slate-50 border-b-2 border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-tenerife-ocean focus:border-tenerife-ocean block p-3 outline-none">
+                        <option value="" disabled selected>Cargando periodos...</option>
+                    </select>
+                </div>
+
+            </form>
+
+            <div class="p-8 border-t h-full border-slate-100 text-right">
+                <button onclick="generarJSON()"
+                    class="bg-sky-400 text-2xl w-full h-full cursor-pointer hover:bg-sky-700 text-white font-bold py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                    Ver
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="output" class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/50 p-4">
+        <div class="modal-appear relative border-[10px] border-gray-200/40 rounded-3xl overflow-hidden">
+
+            <button onclick="cerrarModal()"
+                class="cursor-pointer hover:text-blue-800 absolute top-4 right-4 z-[60] text-gray-800 w-12 h-12 flex items-center justify-center"
+                aria-label="Cerrar modal">
+                <span class="text-6xl font-light">&times;</span>
+            </button>
+
+            <div
+                class="bg-white w-full h-full shadow-2xl text-black flex items-center justify-center text-4xl font-bold">
+                <div id="modal-text"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        const currentYear = new Date().getFullYear();
+        const yearSelect = document.getElementById('AÑO');
+        const monthSelect = document.getElementById('MES');
+        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+        for (let i = 0; i <= 10; i++) {
+            let option = new Option(currentYear - i, currentYear - i);
+            yearSelect.add(option);
+        }
+
+        meses.forEach((mes, index) => {
+            let option = new Option(mes, index + 1);
+            monthSelect.add(option);
+        });
+
+        const DICTIONARY_URL = 'https://datos.tenerife.es/ckan/dataset/3cf96f37-47b7-4485-931c-c32a2b13e5c0/resource/84788ea3-8c0a-471a-8475-8d3eec9f7f69/download/diccionario-de-datos-de-locales-de-hosteleria-y-restauracion-en-tenerife.json';
+
+        async function fetchDictionary() {
+            try {
+                const response = await fetch(DICTIONARY_URL);
+                const data = await response.json();
+
+                console.log("Datos cargados:", data);
+
+                populateSelect('CCAA_CODE', data, 'CCAA');
+                populateSelect('PROVINCIA_CODE', data, 'PROVINCIA');
+                populateSelect('CATEGORIA_ALOJAMIENTO_CODE', data, 'CATEGORIA');
+                populateSelect('PERIODO_ANTELACION_CODE', data, 'ANTELACION');
+
+            } catch (error) {
+                console.error("Error cargando el JSON:", error);
+                document.querySelectorAll('select').forEach(s => {
+                    if (s.options[0].text.includes('Cargando')) s.options[0].text = "Error al cargar datos (Revisar Consola)";
+                });
+            }
+        }
+
+        function populateSelect(elementId, jsonDate, keyword) {
+            const select = document.getElementById(elementId);
+
+            let dummyOptions = [];
+
+            if (keyword === 'CCAA') dummyOptions = [{ code: '05', label: 'Canarias' }, { code: '01', label: 'Andalucía' }];
+            if (keyword === 'PROVINCIA') dummyOptions = [{ code: '38', label: 'Santa Cruz de Tenerife' }, { code: '35', label: 'Las Palmas' }];
+            if (keyword === 'CATEGORIA') dummyOptions = [
+                { code: 'H5', label: 'Hotel 5 Estrellas' },
+                { code: 'H4', label: 'Hotel 4 Estrellas' },
+                { code: 'AP', label: 'Apartamento Turístico' }
+            ];
+            if (keyword === 'ANTELACION') dummyOptions = [{ code: '0', label: 'Mismo día' }, { code: '1', label: '1 día antes' }];
+
+            select.innerHTML = '<option value="" disabled selected>Selecciona una opción</option>';
+
+            dummyOptions.forEach(opt => {
+                let option = new Option(opt.label, opt.code);
+                select.add(option);
+            });
+        }
+
+        fetchDictionary();
+
+        function cerrarModal() {
+            const modal = document.getElementById('output');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+        function abrirModal(contenido = "aadfaf") {
+            const modal = document.getElementById('output');
+            const textContainer = document.getElementById('modal-text');
+
+            if (modal) {
+                if (textContainer) textContainer.innerText = contenido;
+                modal.classList.remove('hidden');
+            }
+        }
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                cerrarModal();
+            }
+        });
+
+        const creates = async ({ setErrors, setStatus, ...props }) => {
+            setErrors(null);
+            setStatus(true);
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/predict", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(props)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw { response: { data: errorData }, message: `Error: ${response.status}` };
+                }
+
+                const data = await response.json();
+
+                setStatus("success");
+                if (typeof showLoader === 'function') showLoader();
+                setTimeout(() => typeof hideLoader === 'function' && hideLoader(), 4000);
+
+                console.log(data);
+                return data;
+
+            } catch (error) {
+                console.error(error);
+
+                if (error.response && error.response.data && error.response.data.errors) {
+                    setErrors(Object.values(error.response.data.errors).flat());
+                } else {
+                    setErrors(error.message || "Error desconocido");
+                }
+
+                setStatus(false);
+                if (typeof showError === 'function') showError();
+                setTimeout(() => typeof hideError === 'function' && hideError(), 4000);
+
+                throw error;
+            }
+        };
+
+        async function generarJSON() {
+            const formData = {
+                "AÑO": parseInt(document.getElementById('AÑO').value) || 0,
+                "MES": parseInt(document.getElementById('MES').value) || 0,
+                "PERIODO_ANTELACION_CODE": document.getElementById('PERIODO_ANTELACION_CODE').value || 0,
+                "CCAA_CODE": document.getElementById('CCAA_CODE').value || 0,
+                "PROVINCIA_CODE": document.getElementById('PROVINCIA_CODE').value || 0,
+                "CATEGORIA_ALOJAMIENTO_CODE": document.getElementById('CATEGORIA_ALOJAMIENTO_CODE').value || 0
+            };
+
+
+            console.log(formData)
+
+            try {
+                const respuestaAPI = await creates({
+                    setErrors: (err) => console.log("Errores:", err),
+                    setStatus: (stat) => console.log("Estado:", stat),
+                    ...formData
+                });
+
+                if (respuestaAPI) {
+                    // 1. Capturamos el contenedor del modal y el div interno
+                    const modal = document.getElementById('output');
+                    // Usamos querySelector para llegar al div blanco donde va el contenido
+                    const outputContent = modal.querySelector('.bg-white');
+
+                    // 2. Extraemos los datos
+                    const { categoria, prediccion } = respuestaAPI;
+
+                    // 3. Definimos estilos
+                    const esCaro = categoria.toLowerCase() === 'caro';
+                    const colorClase = esCaro ? 'text-red-600' : 'text-green-600';
+                    const bgClase = esCaro ? 'bg-red-50' : 'bg-green-50';
+                    const icono = esCaro
+                        ? '<i class="fa-solid fa-circle-exclamation text-6xl mb-4"></i>'
+                        : '<i class="fa-solid fa-circle-check text-6xl mb-4"></i>';
+
+                    // 4. Inyectamos el diseño
+                    outputContent.innerHTML = `
+            <div class="flex flex-col items-center justify-center p-8 rounded-2xl ${bgClase} transition-all duration-500 w-full h-full shadow-inner">
+                
+                ${icono}
+                <h3 class="text-2xl font-light text-gray-500 uppercase tracking-widest text-center">Resultado</h3>
+                <p class="text-7xl font-black ${colorClase} drop-shadow-sm mt-2 text-center">
+                    ${categoria.toUpperCase()}
+                </p>
+                <div class="mt-6 h-1 w-24 rounded-full ${esCaro ? 'bg-red-200' : 'bg-green-200'}"></div>
+                <p class="mt-4 text-gray-400 text-sm font-medium text-center">
+                    Basado en el análisis de datos de hostelería
+                </p>
+            </div>
+        `;
+
+                    // 5. ¡IMPORTANTE! Mostramos el modal quitando 'hidden'
+                    modal.classList.remove('hidden');
+                }
+
+            } catch (error) {
+                console.error("No se pudo obtener la predicción", error);
+                // Opcional: mostrar un mensaje de error en el modal si la API falla
+            }
+
+            const outputDiv = document.getElementById('output');
+            const outputContent = document.querySelector('#output > div > div');
+            outputDiv.classList.remove('hidden');
+            // outputContent.innerHTML = `<pre>${JSON.stringify(formData, null, 2)}</pre>`;
+        }
+
+    </script>
+
 </body>
+
 </html>

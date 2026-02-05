@@ -9,7 +9,6 @@ from fastapi import Request
 app = FastAPI(title="API Segittur")
 templates = Jinja2Templates(directory="pages")
 
-# 1. Definir el esquema
 class HotelInput(BaseModel):
     AÑO: int
     MES: int
@@ -18,19 +17,15 @@ class HotelInput(BaseModel):
     PROVINCIA_CODE: int
     CATEGORIA_ALOJAMIENTO_CODE: int
 
-# 2. CARGA DINÁMICA DEL MODELO
-RUN_ID = "6c8fb1736a5f43d2a3d5a200214b36e0" 
-
-# MLflow permite cargar el modelo usando esta URI especial
+RUN_ID = "7ca55c0ff95d4c1183fe797be8c76fed" 
 model_uri = f"runs:/{RUN_ID}/modelo_final"
 
 try:
-    # Usamos pyfunc para cargar cualquier sabor de modelo (sklearn, etc)
     model = mlflow.pyfunc.load_model(model_uri)
-    model_status = "ok"
-    print(f"✅ Modelo {RUN_ID} cargado correctamente desde MLflow")
+    model_status = "ko"
+    print(f"Modelo {RUN_ID} cargado")
 except Exception as e:
-    print(f"❌ Error al cargar modelo: {e}")
+    print(f"Error al cargar modelo: {e}")
     model_status = "ko"
 
 # --- Endpoints ---
@@ -45,7 +40,7 @@ def health():
 
 @app.post("/predict")
 def predict(input_data: HotelInput):
-    if model_status == "ko":
+    if model_status == "ok":
         raise HTTPException(status_code=500, detail="Modelo no cargado")
     
     df_input = pd.DataFrame([input_data.dict()])

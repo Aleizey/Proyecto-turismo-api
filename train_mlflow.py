@@ -40,6 +40,6 @@ with mlflow.start_run() as run:
     # Guardamos el modelo con una "firma" (input example) para que la API sepa qué recibe
     mlflow.sklearn.log_model(rf, "modelo_final")
     
-    print(f"✅ Entrenamiento completado.")
+    print(f"Entrenamiento completado.")
     print(f"ID de ejecución (RUN_ID): {run.info.run_id}")
     print(f"Accuracy: {accuracy:.4f}")
