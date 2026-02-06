@@ -13,17 +13,26 @@ from databricks.sdk import WorkspaceClient
 app = FastAPI(title="API Segittur")
 templates = Jinja2Templates(directory="pages")
 
+#class HotelInput(BaseModel):
+#    AÑO: int
+#    MES: int
+#    PERIODO_ANTELACION_CODE: int
+#    CCAA_CODE: int
+#    PROVINCIA_CODE: int 
+#    CATEGORIA_ALOJAMIENTO_CODE: int
+
 class HotelInput(BaseModel):
     AÑO: int
     MES: int
-    PERIODO_ANTELACION_CODE: int
-    CCAA_CODE: int
-    PROVINCIA_CODE: int 
-    CATEGORIA_ALOJAMIENTO_CODE: int
+    PERIODO_ANTELACION: str 
+    CCAA: str               
+    PROVINCIA: str          
+    CATEGORIA_ALOJAMIENTO: str
 
 DB_HOST = "https://dbc-1a9bf387-9846.cloud.databricks.com"
 DB_TOKEN = os.getenv("DATABRICKS_TOKEN")
-ruta_volumen = "/Volumes/workspace/default/modeliapro/model.pkl"
+#ruta_volumen = "/Volumes/workspace/default/modeliapro/model.pkl"
+ruta_volumen = "/Volumes/workspace/default/modelohotelero/modelo_hotelero.pkl"
 
 try:
     w = WorkspaceClient(host=DB_HOST, token=DB_TOKEN)
@@ -56,15 +65,30 @@ async def read_item(request: Request):
 def health():
     return {"status": model_status}
 
+# @app.post("/predict")
+# def predict(input_data: HotelInput):
+#    if model_status == "ko":
+#        raise HTTPException(status_code=500, detail="Modelo no cargado")
+#    
+#    df_input = pd.DataFrame([input_data.dict()])
+#    prediction = model.predict(df_input)
+#    
+#    return {
+#        "prediccion": int(prediction[0]),
+#        "categoria": "Caro" if prediction[0] == 1 else "Barato"
+#    }
+
 @app.post("/predict")
 def predict(input_data: HotelInput):
     if model_status == "ko":
         raise HTTPException(status_code=500, detail="Modelo no cargado")
-    
     df_input = pd.DataFrame([input_data.dict()])
-    prediction = model.predict(df_input)
     
-    return {
-        "prediccion": int(prediction[0]),
-        "categoria": "Caro" if prediction[0] == 1 else "Barato"
-    }
+    try:
+        prediction = model.predict(df_input)
+        return {
+            "prediccion": int(prediction[0]),
+            "categoria": "Caro" if prediction[0] == 1 else "Barato"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error en la predicción: {str(e)}")

@@ -25,9 +25,9 @@
 
     <div class="justify-center flex">
         <div
-            class=" w-max rounded-3xl bg-white w-full grid grid-cols-3 max-w-2xl rounded-2xl shadow-xl overflow-hidden absolute top-[30%] ">
+            class=" rounded-3xl bg-white w-full grid grid-cols-1 max-w-6xl rounded-2xl shadow-xl overflow-hidden absolute top-[30%] ">
 
-            <form id="dataForm" class="p-8 grid grid-cols-1 col-span-2 md:grid-cols-2 gap-6">
+            <form id="dataForm" class="p-8 grid grid-cols-1 col-span-1 md:grid-cols-2 gap-6">
 
                 <div class="relative group">
                     <label class="block text-sm font-semibold text-slate-600 mb-2">Año</label>
@@ -93,7 +93,7 @@
 
             <div class="p-8 border-t h-full border-slate-100 text-right">
                 <button onclick="generarJSON()"
-                    class="bg-sky-400 text-2xl w-full h-full cursor-pointer hover:bg-sky-700 text-white font-bold py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                    class="bg-sky-400 text-2xl w-full h-full cursor-pointer hover:bg-sky-700 text-white font-bold py-2 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
                     Ver
                 </button>
             </div>
@@ -266,15 +266,11 @@
                 });
 
                 if (respuestaAPI) {
-                    // 1. Capturamos el contenedor del modal y el div interno
                     const modal = document.getElementById('output');
-                    // Usamos querySelector para llegar al div blanco donde va el contenido
                     const outputContent = modal.querySelector('.bg-white');
 
-                    // 2. Extraemos los datos
                     const { categoria, prediccion } = respuestaAPI;
 
-                    // 3. Definimos estilos
                     const esCaro = categoria.toLowerCase() === 'caro';
                     const colorClase = esCaro ? 'text-red-600' : 'text-green-600';
                     const bgClase = esCaro ? 'bg-red-50' : 'bg-green-50';
@@ -282,7 +278,6 @@
                         ? '<i class="fa-solid fa-circle-exclamation text-6xl mb-4"></i>'
                         : '<i class="fa-solid fa-circle-check text-6xl mb-4"></i>';
 
-                    // 4. Inyectamos el diseño
                     outputContent.innerHTML = `
             <div class="flex flex-col items-center justify-center p-8 rounded-2xl ${bgClase} transition-all duration-500 w-full h-full shadow-inner">
                 
@@ -297,22 +292,15 @@
                 </p>
             </div>
         `;
-
-                    // 5. ¡IMPORTANTE! Mostramos el modal quitando 'hidden'
                     modal.classList.remove('hidden');
                 }
-
             } catch (error) {
                 console.error("No se pudo obtener la predicción", error);
-                // Opcional: mostrar un mensaje de error en el modal si la API falla
             }
-
             const outputDiv = document.getElementById('output');
             const outputContent = document.querySelector('#output > div > div');
             outputDiv.classList.remove('hidden');
-            // outputContent.innerHTML = `<pre>${JSON.stringify(formData, null, 2)}</pre>`;
         }
-
     </script>
 
 </body>
