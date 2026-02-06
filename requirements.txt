@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 mlflow
-scikit-learn
+scikit-learn==1.6.0 
 pandas
 pydantic
 numpy
